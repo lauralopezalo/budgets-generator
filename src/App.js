@@ -1,15 +1,16 @@
-import { GlobalStyle } from './GlobalStyle';
 import Routes from './routes/routes';
-
+import { GlobalStyle } from 'GlobalStyle';
 
 
 function App() {
 
   return (
-    <div>
-      {/* <GlobalStyle /> */}
+    <>
+      <GlobalStyle />
       <Routes />
-    </div>
+    </>
+
+
   );
 }
 

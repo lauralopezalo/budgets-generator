@@ -1,14 +1,14 @@
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Welcome from '../pages/Welcome/Welcome';
-import Budget from '../pages/Budget/Budget';
+import Budgets from '../pages/Budgets/Budgets';
+import PageNotFound from '../pages/404/PageNotFound';
 
 const Router = () => (
     <BrowserRouter>
         <Routes>   
             <Route index element={<Welcome/>} />
-            <Route path="/budget" element={<Budget/>} />
-             { /* Es muy recomendable añadir esta ruta para obtener un mensaje de error en el caso de que la ruta no exista. De lo contrario, si la ruta no existe llegaremos a una página en blanco */}    
-            <Route path="*" element={<div>404</div> } />
+            <Route path="/budget" element={<Budgets/>} />
+            <Route path="*" element={<PageNotFound/>} />
         </Routes>
     </BrowserRouter>
 );
