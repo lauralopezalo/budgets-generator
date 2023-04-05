@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Panel from './Panel/Panel';
 import { useLocalStorage } from 'hooks/useLocalStorage';
+import { useLocation } from "react-router-dom";
 
 const AddNewBudget = (props) => {
     const [budgetName, setBudgetName] = useLocalStorage('budgetName', '');
@@ -13,7 +14,6 @@ const AddNewBudget = (props) => {
 
     const [numPages, setNumPages] = useLocalStorage('numPages', 1);
     const [numLanguages, setNumLanguages] = useLocalStorage('numLanguages', 1);
-
 
 
     // Función encargada de manejar los cambios de estado en los inputs. 
@@ -102,6 +102,44 @@ const AddNewBudget = (props) => {
 
 
 
+    // Función que utiliza el hook useLocation() de React Router para obtener la información de la URL actual. 
+    // El hook useEffect() utiliza el objeto URLSearchParams para obtener los parámetros de consulta de la URL actual. 
+    // Si se encuentran estos parámetros en la URL, el código actualiza los estados correspondientes
+
+    const location = useLocation();
+
+    useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+
+        const webpageValue = searchParams.get("webpage");
+        if (webpageValue !== null) {
+            setWebpage(webpageValue === "true");
+        }
+
+        const seoValue = searchParams.get("seo");
+        if (seoValue !== null) {
+            setSeo(seoValue === "true");
+        }
+
+        const googleAdsValue = searchParams.get("googleAds");
+        if (googleAdsValue !== null) {
+            setGoogleAds(googleAdsValue === "true");
+        }
+
+        const numPagesValue = searchParams.get("numPages");
+        if (numPagesValue !== null) {
+            setNumPages(parseInt(numPagesValue));
+        }
+
+        const numLanguagesValue = searchParams.get("numLanguages");
+        if (numLanguagesValue !== null) {
+            setNumLanguages(parseInt(numLanguagesValue));
+        }
+    }, [location]);
+
+
+
+
     return (
         <div className='min-h-screen flex flex-col justify-center pl-20'>
             <div className='bg-white rounded-2xl p-12'>
@@ -113,8 +151,8 @@ const AddNewBudget = (props) => {
                         type="text"
                         name="budgetName"
                         value={budgetName}
-                        onChange={handleInputChange} 
-                        className="h-10 w-full rounded border p-2 text-sm focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine"/>
+                        onChange={handleInputChange}
+                        className="h-10 w-full rounded border p-2 text-sm focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine" />
                 </div>
                 <div className='my-2'>
                     <label className="text-base leading-8 text-gray-700">Customer:</label>
@@ -123,8 +161,8 @@ const AddNewBudget = (props) => {
                         type="text"
                         name="clientName"
                         value={clientName}
-                        onChange={handleInputChange} 
-                        className="h-10 w-full rounded border p-2 text-sm focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine"/>
+                        onChange={handleInputChange}
+                        className="h-10 w-full rounded border p-2 text-sm focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine" />
                 </div>
                 <div className='my-2'>
                     <input
@@ -164,7 +202,7 @@ const AddNewBudget = (props) => {
                 <button
                     onClick={saveBudget}
                     className="border-2 border-tangerine bg-white font-bold text-tangerine rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white active:bg-orange-500">
-                Save
+                    Save
                 </button>
             </div>
         </div>
