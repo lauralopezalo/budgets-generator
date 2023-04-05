@@ -71,6 +71,10 @@ const AddNewBudget = (props) => {
 
     // Crea un objeto newBudget y lo pasa por props al componente padre Budget
     const saveBudget = () => {
+        if (budgetName === '') {
+            alert('Please, fill in the budget name.');
+            return;
+        }
         const date = new Date();
         const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)}`;
         const newBudget = {
@@ -141,7 +145,7 @@ const AddNewBudget = (props) => {
 
 
     return (
-        <div className='min-h-screen flex flex-col justify-center pl-20'>
+        <div className='min-h-screen flex flex-col justify-center'>
             <div className='bg-white rounded-2xl p-12'>
                 <h1 className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl mb-5">Create a new budget</h1>
                 <div className='my-2'>
@@ -201,7 +205,7 @@ const AddNewBudget = (props) => {
                 <h3 className="text-lg leading-8 text-gray-700 my-5">Total price: {totalPrice} €</h3>
                 <button
                     onClick={saveBudget}
-                    className="border-2 border-tangerine bg-white font-bold text-tangerine rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white active:bg-orange-500">
+                    className="inline-block rounded-full border-2 border-tangerine bg-white font-bold text-tangerine px-4 py-1 m-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white active:bg-orange-500">
                     Save
                 </button>
             </div>

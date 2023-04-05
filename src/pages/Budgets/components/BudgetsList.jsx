@@ -1,23 +1,25 @@
+import { useLocalStorage } from "hooks/useLocalStorage";
 import React, { useState, useEffect } from "react";
 
 
-const BudgetsList = (props, { onDeleteBudget }) => {
+const BudgetsList = (props) => {
 
     const [sortedBudgets, setSortedBudgets] = useState([...props.budgets]);
+    // Obtiene el tipo de ordenamiento actual del localStorage
+    const savedSortType = localStorage.getItem('sortType');
+    const [sortType, setSortType] = useLocalStorage(savedSortType, 'default');
 
-    // Ordena por fecha (muestra primero los más recientes)
+
     const handleSortDate = () => {
-        const sorted = [...sortedBudgets].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
-        setSortedBudgets(sorted);
+        setSortType('date');
     };
 
     const handleSortAlphabetical = () => {
-        const sorted = [...sortedBudgets].sort((a, b) => (a.budgetName > b.budgetName ? 1 : a.budgetName < b.budgetName ? -1 : 0));
-        setSortedBudgets(sorted);
+        setSortType('alphabetical');
     };
 
     const handleSortReset = () => {
-        setSortedBudgets([...props.budgets]);
+        setSortType('default');
     };
 
     const handleSearch = (event) => {
@@ -29,38 +31,49 @@ const BudgetsList = (props, { onDeleteBudget }) => {
     };
 
 
-    // Actualiza la lista de presupuestos sortedBudgets (que es la que se muestra por pantalla) cada vez que cambia `budgets`
+    // Actualiza la lista de presupuestos sortedBudgets (que es la que se muestra por pantalla) cada vez que cambia `budgets` o se modifica el modo de ordenamiento
     useEffect(() => {
-        setSortedBudgets(props.budgets);
-    }, [props.budgets]);
+        let sorted;
+        if (sortType === 'date') {
+            sorted = [...props.budgets].sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+        } else if (sortType === 'alphabetical') {
+            sorted = [...props.budgets].sort((a, b) => (a.budgetName > b.budgetName ? 1 : a.budgetName < b.budgetName ? -1 : 0));
+        } else {
+            sorted = [...props.budgets];
+        }
+        setSortedBudgets(sorted);
+    }, [props.budgets, sortType]);
+
 
 
     return (
         <div className="mt-24">
             <div>
-                <input 
-                    placeholder="Search by name" 
-                    type="text" 
-                    onChange={handleSearch} 
-                    className="h-10 w-96 rounded border p-2 text-sm focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine"/>
-                <div className="w-full mx-auto">
-                    <button
-                        className="border-2 border-tangerine bg-white font-bold text-tangerine rounded-md px-4 py-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white focus:bg-tangerine focus:text-white"
-                        onClick={handleSortDate}>
-                        Sort by Date</button>
-                    <button
-                        className="border-2 border-tangerine bg-white font-bold text-tangerine rounded-md px-4 py-2 m-4 transition duration-500 ease select-none hover:bg-tangerine hover:text-white focus:bg-tangerine focus:text-white"
-                        onClick={handleSortAlphabetical}>
-                        Sort Alphabetically</button>
-                    <button
-                        className="border-2 border-tangerine bg-white font-bold text-tangerine rounded-md px-4 py-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white focus:bg-tangerine focus:text-white"
-                        onClick={handleSortReset}>
-                        Resert</button>
+                <div className="flex flex-wrap items-center justify-between bg-gray-100 divide-y divide-gray-200 px-3 py-2">
+                    <div >
+                        <button
+                            className="inline-block rounded-full border-2 border-tangerine bg-white text-sm font-semibold text-tangerine px-4 py-1 m-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white focus:bg-orange-500 focus:text-white"
+                            onClick={handleSortDate}>
+                            Sort by Date</button>
+                        <button
+                            className="inline-block rounded-full border-2 border-tangerine bg-white text-sm font-semibold text-tangerine px-4 py-1 m-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white focus:bg-orange-500 focus:text-white"
+                            onClick={handleSortAlphabetical}>
+                            Sort Alphabetically</button>
+                        <button
+                            className="inline-block rounded-full border-2 border-tangerine bg-white text-sm font-semibold text-tangerine px-4 py-1 m-2 transition duration-500 ease select-none hover:bg-tangerine hover:text-white focus:bg-orange-500 focus:text-white"
+                            onClick={handleSortReset}>
+                            Resert</button>
+                    </div>
+                    <input
+                        placeholder="Search by name"
+                        type="text"
+                        onChange={handleSearch}
+                        className="h-10 w-96 rounded border p-2 text-sm focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine" />
                 </div>
-                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <table className="table-fixed min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                     <thead className="bg-gray-50 dark:bg-gray-800">
                         <tr>
-                            <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                            <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left text-gray-500">
                                 Budget
                             </th>
                             <th scope="col" className="px-4 py-3.5 text-sm font-normal text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -83,10 +96,10 @@ const BudgetsList = (props, { onDeleteBudget }) => {
                     <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
                         {sortedBudgets.map((budget) => (
                             <tr key={budget.date}>
-                                <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-normal">
                                     {budget.budgetName}
                                 </td>
-                                <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
+                                <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-normal">
                                     {budget.client}
                                 </td>
                                 <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
@@ -105,7 +118,7 @@ const BudgetsList = (props, { onDeleteBudget }) => {
                                 </td>
                                 <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                                     <button
-                                        className="border-2 border-red-500 bg-white font-bold text-red-500 rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-500 hover:text-white active:bg-red-600"
+                                        className="inline-block rounded-full border-2 border-red-500 bg-white font-bold text-red-500 px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-500 hover:text-white active:bg-red-600"
                                         onClick={() => props.onDeleteBudget(budget.date)}>
                                         Delete
                                     </button>

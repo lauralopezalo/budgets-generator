@@ -34,7 +34,10 @@ const Panel = (props) => {
                             value={props.numPages}
                             onChangeQuantity={(newValue) => handleNumPagesChange(newValue)}
                         />
-                        <StyledInfoButton onClick={() => handleShowModal("Indicate here how many pages your website will have.")}>i</StyledInfoButton>
+                        <StyledInfoButton
+                            onClick={() => handleShowModal("Indicate here how many pages your website will have.")}>
+                            i
+                        </StyledInfoButton>
                     </div>
                 </div>
 

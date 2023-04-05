@@ -16,7 +16,7 @@ const QuantitySelector = (props) => {
         <div className='flex items-center'>
             <button 
                 onClick={()=>handleDecrement()}
-                className="bg-tangerine text-white font-bold rounded-md w-7 h-7 m-2">
+                className="inline-block rounded-full bg-tangerine text-white font-bold w-7 h-7 m-2">
                 -
             </button>
             <input 
@@ -26,7 +26,7 @@ const QuantitySelector = (props) => {
                 className="h-10 w-14 rounded border p-2 text-sm text-center focus:outline-none focus:shadow-outline focus:border-2 focus:border-tangerine"/>
             <button 
                 onClick={()=>handleIncrement()}
-                className="bg-tangerine text-white font-bold rounded-md w-7 h-7 m-2">
+                className="inline-block rounded-full bg-tangerine text-white font-bold w-7 h-7 m-2">
                 +
             </button>
         </div>

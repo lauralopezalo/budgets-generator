@@ -20,7 +20,7 @@ const Budgets = () => {
 
 
     return (
-        <div className="min-h-screen flex flex-wrap justify-between bg-bermuda" style={{ overflowX: "auto" }}>
+        <div className="min-h-screen flex flex-wrap justify-evenly bg-bermuda" style={{ overflowX: "auto" }}>
             <div className="w-full md:w-auto">
                 <AddNewBudget budgets={budgets} setBudgets={setBudgets} onAddBudget={handleAddBudget}></AddNewBudget>
             </div>
